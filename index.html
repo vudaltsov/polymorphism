@@ -1,0 +1,214 @@
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/theme/simple.min.css" id="theme">
+    <link rel="stylesheet" href="highlight-phpstorm-light-theme.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap">
+    <style>
+        :root {
+            --r-main-font: 'Roboto', 'Noto Color Emoji', sans-serif;
+            --r-heading-font: 'Roboto', 'Noto Color Emoji', sans-serif;
+            --r-code-font: 'Roboto Mono', 'Noto Color Emoji', monospace;
+            --r-block-margin: 10px;
+        }
+        .reveal pre {
+            font-size: .50em;
+        }
+        .nohighlight {
+            padding: 1em !important;
+        }
+        .reveal .hljs {
+            min-height: auto;
+        }
+        td.hljs-ln-code {
+            white-space: pre;
+        }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6, .reveal pre, .reveal p, .reveal img {
+            margin: 0 var(--r-block-margin) calc(var(--r-block-margin) * 2);
+        }
+        .reveal pre {
+            width: auto;
+        }
+        .reveal pre code {
+            max-height: none;
+        }
+        .reveal .r-stack > * {
+            margin: 0;
+        }
+        .horizontal {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+        }
+        .horizontal > * {
+            flex-grow: 1;
+        }
+        .horizontal-half > * {
+            flex-grow: 0 !important;
+            width: calc(50% - var(--r-block-margin) * 2) !important;
+        }
+    </style>
+    <title>Полиморфизм в современном PHP</title>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section data-background-image="bg.png">
+            <p><img src="live-php-logo.png" alt="" style="max-width: 200px;"></p>
+            <h1 style="color: white; font-size: 60px;">Полиморфизм<br>в современном PHP</h1>
+        </section>
+
+        <section>
+            <p><img src="avatar.jpg" alt="" style="max-width: 300px;"></p>
+            <p>Валентин <a href="https://t.me/vudaltsov">@vudaltsov</a></p>
+            <p>
+                <a href="https://t.me/phpyh">Пых</a> /
+                <a href="https://youtube.com/@PHPPoint">PHP Point</a> /
+                <a href="https://t.me/isPHPdying">PHP умирает?!</a>
+            </p>
+        </section>
+
+        <section>
+            <p><strong>Полиморфизм</strong> — возможность существования чего-либо в различных формах.</p>
+        </section>
+
+        <section>
+            <img src="termites.jpg" alt="" style="max-width: 400px;">
+            <p style="font-size: 14px;"><a href="http://insectalib.ru/books/item/f00/s00/z0000030/st034.shtml" target="_blank">Половой полиморфизм у туркестанского термита</a></p>
+        </section>
+
+        <section>
+            <h3>Мономорфная система типов</h3>
+        </section>
+
+        <section>
+            <pre>
+                <code class="language-php" data-trim>
+                    function count(array&lt;int&gt; $ints): int
+                    {
+                        // ...
+                    }
+                </code>
+            </pre>
+            <pre class="fragment">
+                <code class="language-php" data-trim>
+                    function countFloats(array&lt;float&gt; $floats): int
+                    {
+                        // ...
+                    }
+                </code>
+            </pre>
+            <pre class="fragment">
+                <code class="language-php" data-trim>
+                    function countStrings(array&lt;string&gt; $strings): int
+                    {
+                        // ...
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section>
+            <h3>+ Параметрический полиморфизм</h3>
+        </section>
+
+        <section>
+            <pre>
+                <code class="language-php" data-trim>
+                    /**
+                     * @template TValue
+                     * @param array&lt;TValue&gt; $array
+                     */
+                    function count(array $array): int
+                    {
+                        // ...
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section>
+            <h3>Языки бывают <strong style="background: black; color: white;">моно</strong>морфными...</h3>
+        </section>
+
+        <section>
+            <h3>... и <strong style="background: black; color: white;">поли</strong>морфными.</h3>
+        </section>
+
+        <section>
+            <pre>
+                <code class="language-php" data-trim>
+                    $value = 'php';
+                </code>
+            </pre>
+            <pre class="fragment">
+                <code class="language-php" data-trim>
+                    // $value is string
+                    print($value);
+                </code>
+            </pre>
+            <pre class="fragment">
+                <code class="language-php" data-trim>
+                    // $value is mixed
+                    var_dump($value);
+                </code>
+            </pre>
+            <pre class="fragment">
+                <code class="language-php" data-trim>
+                    function php(): void {}
+
+                    // $value is callable
+                    'php'();
+                    $value();
+                </code>
+            </pre>
+        </section>
+
+        <section>
+            <pre>
+                <code class="language-php" data-trim>
+                    // $value is non-empty-string
+                    // $value is literal-string
+                    // $value is 'php'
+                    // $value is lower-case-string
+                    // $value is non-empty-lower-case-string
+                    // $value is non-falsy-string
+                    // $value is truthy-string
+                    $value = 'php';
+                </code>
+            </pre>
+        </section>
+
+        <section>
+            <img src="string-rust-vs-php.jpg" alt="" style="max-width: 700px">
+        </section>
+
+        <section>
+            <img src="string-php-vs-java.jpg" alt="" style="max-width: 700px">
+        </section>
+
+        <!--<section>
+            <h3>Спасибо за внимание!</h3>
+            <img style="width: 45%;" src="qr.png" alt="QR code">
+            <p><a href="https://t.me/vudaltsov">@vudaltsov</a> / <a href="https://t.me/phpyh">Пых</a> / <a href="https://youtube.com/@PHPPoint">PHP Point</a></p>
+        </section>-->
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/plugin/highlight/highlight.min.js"></script>
+<script>
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        plugins: [RevealHighlight],
+        slideNumber: true,
+        autoAnimate: true,
+    });
+</script>
+</body>
+</html>

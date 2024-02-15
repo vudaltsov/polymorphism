@@ -14,6 +14,7 @@
             --r-heading-font: 'Roboto', 'Noto Color Emoji', sans-serif;
             --r-code-font: 'Roboto Mono', 'Noto Color Emoji', monospace;
             --r-block-margin: 10px;
+            --r-main-font-size: 50px;
         }
         body {
             background: #000 !important;
@@ -55,7 +56,7 @@
             width: calc(50% - var(--r-block-margin) * 2) !important;
         }
         .reveal .slide-number {
-            bottom: 10% !important;
+            bottom: 9% !important;
             font-size: 50%;
             right: 48%;
         }
@@ -94,7 +95,7 @@
         </section>
 
         <section>
-            <img src="termites.jpg" alt="" style="max-width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,.15);">
+            <img src="termites.jpg" alt="" style="max-width: 600px; box-shadow: 0 5px 15px rgba(0,0,0,.15);">
             <p style="font-size: 20px;"><a href="http://insectalib.ru/books/item/f00/s00/z0000030/st034.shtml" target="_blank">Половой полиморфизм у туркестанского термита</a></p>
         </section>
 
@@ -305,7 +306,26 @@
         </section>
 
         <section>
-            <h2>Полиморфизм <strong>подтипов</strong> в ООП</h2>
+            <h2>Полиморфизм<br>подтипов в<strong>&nbsp;ООП</strong></h2>
+        </section>
+
+        <section>
+            <pre>
+                <code class="language-php" data-trim data-line-numbers>
+                    interface I
+                    {
+                        public function do(string $a): iterable;
+                    }
+
+                    final class C implements I
+                    {
+                        public function do(int|string $a, SplFileInfo $b = new SplFileInfo(__FILE__)): array
+                        {
+                            return [];
+                        }
+                    }
+                </code>
+            </pre>
         </section>
 
         <section>
@@ -389,6 +409,25 @@
 
         <section>
             <img src="variance-arrows.png" alt="" style="box-shadow: 0 5px 15px rgba(0,0,0,.15);">
+        </section>
+
+        <section>
+            <pre>
+                <code class="language-php" data-trim data-line-numbers>
+                    interface I
+                    {
+                        public function do(string $a): iterable;
+                    }
+
+                    final class C implements I
+                    {
+                        public function do(int|string $a, SplFileInfo $b = new SplFileInfo(__FILE__)): array
+                        {
+                            return [];
+                        }
+                    }
+                </code>
+            </pre>
         </section>
 
         <section>

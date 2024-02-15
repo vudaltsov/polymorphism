@@ -85,8 +85,8 @@
         </section>
 
         <section data-background-image="bg.png">
-            <img src="termites.jpg" alt="" style="max-width: 400px;">
-            <p style="font-size: 14px;"><a href="http://insectalib.ru/books/item/f00/s00/z0000030/st034.shtml" target="_blank">Половой полиморфизм у туркестанского термита</a></p>
+            <img src="termites.jpg" alt="" style="max-width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,.15);">
+            <p style="font-size: 20px;"><a href="http://insectalib.ru/books/item/f00/s00/z0000030/st034.shtml" target="_blank">Половой полиморфизм у туркестанского термита</a></p>
         </section>
 
         <section data-background-image="bg.png">
@@ -302,9 +302,11 @@
         <section data-background-image="bg.png">
             <pre>
                 <code class="language-php" data-trim data-line-numbers>
-                    final class Yii {}
+                    interface Website {}
 
-                    final class Symfony {}
+                    final class Yii implements Website {}
+
+                    final class Symfony implements Website {}
 
                     interface Developer
                     {
@@ -326,7 +328,7 @@
                         public function build(): Yii|Symfony;
                     }
 
-                    final class Taylor implements Developer
+                    final class Taylor
                     {
                         public function fix(Symfony|Laravel $site): void
                         {
@@ -366,7 +368,7 @@
                         public function build(?Lamborgini $lamborgini = null): Yii
                         {
                             if ($lamborgini === null) {
-                                sleep(5);
+                                sleep(10);
                             }
 
                             return new Yii();
@@ -435,35 +437,29 @@
         </section>
 
         <section data-background-image="bg.png">
-            <h3>A behavioral notion of subtyping (Liskov, Wing, 1994)</h3>
+            <h3>A <strong>behavioral</strong> notion of subtyping (Liskov, Wing, 1994)</h3>
             <p>Subtype requirement. Let φ(x) be a property provable about objects x of type T.
                 Then φ(y) should be true for objects y of type S where S is a subtype of T.</p>
         </section>
 
         <section data-background-image="bg.png">
+            <h3>A behavioral notion of <strong>subtyping</strong> (Liskov, Wing, 1994)</h3>
+            <p><strong>Subtype</strong> requirement. Let φ(x) be a property provable about objects x of <strong>type</strong> T.
+                Then φ(y) should be true for objects y of <strong>type</strong> S where S is a <strong>subtype</strong> of T.</p>
+        </section>
+
+        <section data-background-image="bg.png">
+            <h2><strong>Вариантность</strong> дженериков</h2>
+        </section>
+
+        <section data-background-image="bg.png">
             <pre>
                 <code class="language-php" data-trim data-line-numbers>
-                    /**
-                     * @template TSite of Yii|Symfony
-                     */
-                    interface Fixer
-                    {
-                        /**
-                         * @param TSite $site
-                         */
-                        public function fix(Yii|Symfony $site): void;
-                    }
+                    interface Website {}
 
-                    /**
-                     * @template TSite of Yii|Symfony
-                     */
-                    interface Builder
-                    {
-                        /**
-                         * @return TSite
-                         */
-                        public function build(): Yii|Symfony;
-                    }
+                    final class Yii implements Website {}
+
+                    final class Symfony implements Website {}
                 </code>
             </pre>
         </section>
@@ -472,33 +468,334 @@
             <pre>
                 <code class="language-php" data-trim data-line-numbers>
                     /**
-                     * @implements Developer&lt;Yii&gt;
+                     * @template TWebsite of Website
                      */
-                    final class Vasya implements Developer
+                    final class Portfolio
                     {
-                        public function fix(Yii|Symfony $site): void
+                        /**
+                         * @var list&lt;TWebsite&gt;
+                         */
+                        private array $websites = [];
+
+                        /**
+                         * @param TWebsite $website
+                         */
+                        public function add(Website $website): void
                         {
-                            // fix bugs...
+                            $this->websites[] = $website;
                         }
 
-                        public function build(?object $lamborgini = null): Yii
+                        /**
+                         * @return list&lt;TWebsite&gt;
+                         */
+                        public function all(): array
                         {
-                            return new Yii();
+                            return $this->websites;
                         }
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="11-24">
+                    /** @template TWebsite of Website */
+                    final class Portfolio
+                    {
+                        /** @param TWebsite $website */
+                        public function add(Website $website): void { /** ... */ }
+
+                        /** @return list&lt;TWebsite&gt; */
+                        public function all(): array { /** ... */ }
                     }
 
                     /**
-                     * @param Developer&lt;Yii|Symfony&gt; $developer
+                     * @param Portfolio&lt;Website&gt; $portfolio
                      */
-                    function fixYii(Developer $developer, Yii $site): void
+                    function display(Portfolio $portfolio): void
                     {
-                        $developer->fix($site);
+                        var_dump($portfolio->all());
                     }
 
-                    fixYii(new Vasya(), new Yii());
+                    /**
+                     * @var Portfolio&lt;Symfony&gt; $valentinsPortfolio
+                     */
+                    $valentinsPortfolio = new Portfolio();
 
+                    display($valentinsPortfolio);
                 </code>
             </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="11-24">
+                    /** @template TWebsite of Website */
+                    final class Portfolio
+                    {
+                        /** @param TWebsite $website */
+                        public function add(Website $website): void { /** ... */ }
+
+                        /** @return list&lt;TWebsite&gt; */
+                        public function all(): array { /** ... */ }
+                    }
+
+                    /**
+                     * @param Portfolio&lt;Website&gt; $portfolio
+                     */
+                    function addYii(Portfolio $portfolio): void
+                    {
+                        $portfolio->add(new Yii());
+                    }
+
+                    /**
+                     * @var Portfolio&lt;Symfony&gt; $valentinsPortfolio
+                     */
+                    $valentinsPortfolio = new Portfolio();
+
+                    addYii($valentinsPortfolio);
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="2,14">
+                    /**
+                     * @param Portfolio&lt;Website&gt; $portfolio
+                     */
+                    function addYii(Portfolio $portfolio): void
+                    {
+                        $portfolio->add(new Yii());
+                    }
+
+                    /**
+                     * @var Portfolio&lt;Symfony&gt; $valentinsPortfolio
+                     */
+                    $valentinsPortfolio = new Portfolio();
+
+                    addYii($valentinsPortfolio);
+                </code>
+            </pre>
+            <img src="error.png" alt="">
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="2">
+                    /**
+                     * @template TWebsite of Website
+                     */
+                    final class Portfolio
+                    {
+                        /** @param TWebsite $website */
+                        public function add(Website $website): void { /** ... */ }
+
+                        /** @return list&lt;TWebsite&gt; */
+                        public function all(): array { /** ... */ }
+                    }
+                </code>
+            </pre>
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="11-24">
+                    @template (invariant) TWebsite:
+                        Portfolio&lt;Symfony&gt; ⊆ Portfolio&lt;Symfony&gt;
+                        Portfolio&lt;Website&gt; ⊆ Portfolio&lt;Website&gt;
+                        Portfolio&lt;Symfony&gt; ⊄ Portfolio&lt;Website&gt;
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers>
+                    /**
+                     * @param Portfolio&lt;Website&gt; $portfolio
+                     */
+                    function addYii(Portfolio $portfolio): void
+                    {
+                        $portfolio->add(new Yii());
+                    }
+
+                    /**
+                     * @var Portfolio&lt;Symfony&gt; $valentinsPortfolio
+                     */
+                    $valentinsPortfolio = new Portfolio();
+
+                    addYii($valentinsPortfolio);
+                </code>
+            </pre>
+            <img src="error.png" alt="">
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers>
+                    /**
+                     * @param Portfolio&lt;Website&gt; $portfolio
+                     */
+                    function display(Portfolio $portfolio): void
+                    {
+                        var_dump($portfolio->all());
+                    }
+
+                    /**
+                     * @var Portfolio&lt;Symfony&gt; $valentinsPortfolio
+                     */
+                    $valentinsPortfolio = new Portfolio();
+
+                    display($valentinsPortfolio);
+                </code>
+            </pre>
+            <img src="error-display.png" alt="">
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers>
+                    /**
+                     * @param Portfolio&lt;Website&gt; $portfolio
+                     */
+                    function display(Portfolio $portfolio): void
+                    {
+                        var_dump($portfolio->all());
+                    }
+
+                    /**
+                     * @var Portfolio&lt;Symfony&gt; $valentinsPortfolio
+                     */
+                    $valentinsPortfolio = new Portfolio();
+
+                    display($valentinsPortfolio);
+                </code>
+            </pre>
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="11-24">
+                    @template (covariant) TWebsite:
+                        Portfolio&lt;Symfony&gt; ⊆ Portfolio&lt;Symfony&gt;
+                        Portfolio&lt;Website&gt; ⊆ Portfolio&lt;Website&gt;
+                        Portfolio&lt;Symfony&gt; ⊆ Portfolio&lt;Website&gt;
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="6-7">
+                    /**
+                     * @template-covariant TWebsite of Website
+                     */
+                    final class Portfolio
+                    {
+                        /** @param TWebsite $website */
+                        public function add(Website $website): void { /** ... */ }
+
+                        /** @return list&lt;TWebsite&gt; */
+                        public function all(): array { /** ... */ }
+                    }
+                </code>
+            </pre>
+            <img src="error-covariant-add.png" alt="">
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers>
+                    /**
+                     * @template-covariant TWebsite of Website
+                     */
+                    interface PortfolioRead
+                    {
+                        /** @return list&lt;TWebsite&gt; */
+                        public function all(): array;
+                    }
+
+                    /**
+                     * @template TWebsite of Website
+                     * @implements PortfolioRead&lt;TWebsite&gt;
+                     */
+                    final class Portfolio implements PortfolioRead
+                    {
+                        /** @param TWebsite $website */
+                        public function add(Website $website): void { /** ... */ }
+
+                        public function all(): array { /** ... */ }
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section>
+            <pre>
+                <code class="language-php" data-trim data-line-numbers>
+                    /**
+                     * @param PortfolioRead&lt;Website&gt; $portfolio
+                     */
+                    function display(PortfolioRead $portfolio): void
+                    {
+                        var_dump($portfolio->all());
+                    }
+
+                    /**
+                     * @var Portfolio&lt;Symfony&gt; $valentinsPortfolio
+                     */
+                    $valentinsPortfolio = new Portfolio();
+
+                    display($valentinsPortfolio);
+                </code>
+            </pre>
+            <img src="no-errors.png" alt="">
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="1-5|8|">
+                    /** @template TWebsite of Website */
+                    final class Portfolio
+                    {
+                        // ...
+                    }
+
+                    /**
+                     * @param Portfolio&lt;covariant Website&gt; $portfolio
+                     */
+                    function display(Portfolio $portfolio): void
+                    {
+                        var_dump($portfolio->all());
+                    }
+
+                    /**
+                     * @var Portfolio&lt;Symfony&gt; $valentinsPortfolio
+                     */
+                    $valentinsPortfolio = new Portfolio();
+
+                    display($valentinsPortfolio);
+                </code>
+            </pre>
+            <img src="no-errors.png" alt="">
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers>
+                    /**
+                     * @param Portfolio&lt;covariant Website&gt; $portfolio
+                     */
+                    function addYii(Portfolio $portfolio): void
+                    {
+                        $portfolio->add(new Yii());
+                    }
+
+                    /**
+                     * @var Portfolio&lt;Symfony&gt; $valentinsPortfolio
+                     */
+                    $valentinsPortfolio = new Portfolio();
+
+                    addYii($valentinsPortfolio);
+                </code>
+            </pre>
+            <img src="error-3.png">
         </section>
 
         <!--<section data-background-image="bg.png">

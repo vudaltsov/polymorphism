@@ -51,18 +51,26 @@
             flex-grow: 0 !important;
             width: calc(50% - var(--r-block-margin) * 2) !important;
         }
+        .reveal .slide-number {
+            bottom: 80px !important;
+            font-size: 40px;
+        }
+        /*body {
+            width: 1440px !important;
+            height: 1080px !important;
+        }*/
     </style>
     <title>Полиморфизм в современном PHP</title>
 </head>
 <body>
 <div class="reveal">
     <div class="slides">
-        <section data-background-image="bg.png">
+        <section data-background-image="bg-title.png">
             <p><img src="live-php-logo.png" alt="" style="max-width: 200px;"></p>
             <h1 style="color: white; font-size: 60px;">Полиморфизм<br>в современном PHP</h1>
         </section>
 
-        <section>
+        <section data-background-image="bg.png">
             <p><img src="avatar.jpg" alt="" style="max-width: 300px;"></p>
             <p>Валентин <a href="https://t.me/vudaltsov">@vudaltsov</a></p>
             <p>
@@ -72,39 +80,19 @@
             </p>
         </section>
 
-        <section>
+        <section data-background-image="bg.png">
             <p><strong>Полиморфизм</strong> — возможность существования чего-либо в различных формах.</p>
         </section>
 
-        <section>
+        <section data-background-image="bg.png">
             <img src="termites.jpg" alt="" style="max-width: 400px;">
             <p style="font-size: 14px;"><a href="http://insectalib.ru/books/item/f00/s00/z0000030/st034.shtml" target="_blank">Половой полиморфизм у туркестанского термита</a></p>
         </section>
 
-        <section>
-            <h3>Мономорфная система типов</h3>
-        </section>
-
-        <section>
+        <section data-background-image="bg.png">
             <pre>
                 <code class="language-php" data-trim>
-                    function count(array&lt;int&gt; $ints): int
-                    {
-                        // ...
-                    }
-                </code>
-            </pre>
-            <pre class="fragment">
-                <code class="language-php" data-trim>
-                    function countFloats(array&lt;float&gt; $floats): int
-                    {
-                        // ...
-                    }
-                </code>
-            </pre>
-            <pre class="fragment">
-                <code class="language-php" data-trim>
-                    function countStrings(array&lt;string&gt; $strings): int
+                    function array_map(callable $callback, array $array): array
                     {
                         // ...
                     }
@@ -112,86 +100,416 @@
             </pre>
         </section>
 
-        <section>
-            <h3>+ Параметрический полиморфизм</h3>
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim>
+                    $callable = 'date';
+                </code>
+            </pre>
+            <pre>
+                <code class="language-php" data-trim>
+                    $callable = static fn (int $time) => new DateTimeImmutable("@$time");
+                </code>
+            </pre>
+            <pre>
+                <code class="language-php" data-trim>
+                    $callable = [new DateTimeImmutable(), 'modify'];
+                </code>
+            </pre>
+            <pre>
+                <code class="language-php" data-trim>
+                    $callable = [DateInterval::class, 'createFromDateString'];
+                </code>
+            </pre>
+            <pre>
+                <code class="language-php" data-trim>
+                    $callable = new class {
+                        private const string FORMAT = 'd.m.Y';
+
+                        public function __invoke(string $time): DateTimeImmutable
+                        {
+                            return DateTimeImmutable::createFromFormat(self::FORMAT, $time);
+                        }
+                    };
+                </code>
+            </pre>
         </section>
 
-        <section>
+        <section data-background-image="bg.png">
+            <h2>Это был полиморфизм <strong>подтипов</strong></h2>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim>
+                    function array_map(callable $callback, array $array): array
+                    {
+                        // одинаковая логика для любого callback
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="9-12|2,3,6|3-5|2,4,7|">
+                    /**
+                     * @template TKey of array-key
+                     * @template TInputValue
+                     * @template TOutputValue
+                     * @param callable(TInputValue): TOutputValue $callback
+                     * @param array&lt;TKey, TInputValue&gt; $array
+                     * @return array&lt;TKey, TOutputValue&gt;
+                     */
+                    function array_map(callable $callback, array $array): array
+                    {
+                        // одинаковая логика для любого массива
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <h2>Это был<br><strong>параметрический</strong> полиморфизм</h2>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim>
+                    array_map($callback, $array, $array2);
+                </code>
+            </pre>
+            <pre class="fragment">
+                <code class="language-php" data-trim>
+                    /**
+                     * @template TInputValue
+                     * @template TInputValue2
+                     * @template TOutputValue
+                     * @param callable(TInputValue, TInputValue2): TOutputValue $callback
+                     * @param array&lt;TInputValue&gt; $array
+                     * @param array&lt;TInputValue2&gt; $array2
+                     * @return list&lt;TOutputValue&gt;
+                     */
+                    function array_map(callable $callback, array $array, array $array2): array
+                    {
+                        // кастомная логика для нескольких массивов
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim>
+                    var_dump(array_map(null, ['a', 'b', 'c'], [0, 1]));
+                </code>
+            </pre>
+            <pre class="fragment">
+                <code class="nohighlight" data-trim>
+                    array(3) {
+                        [0] => array(2) {
+                            [0] => string(1) "a"
+                            [1] => int(0)
+                        }
+                        [1] => array(2) {
+                            [0] => string(1) "b"
+                            [1] => int(1)
+                        }
+                        [2] => array(2) {
+                            [0] => string(1) "c"
+                            [1] => NULL
+                        }
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
             <pre>
                 <code class="language-php" data-trim>
                     /**
-                     * @template TValue
-                     * @param array&lt;TValue&gt; $array
+                     * @template TInputValue
+                     * @template TInputValue2
+                     * @param array&lt;TInputValue&gt; $array
+                     * @param array&lt;TInputValue2&gt; $array2
+                     * @return list&lt;array{TInputValue, TInputValue2}&gt;
                      */
-                    function count(array $array): int
+                    function array_map(null $callback, array $array, array $array2): array
                     {
-                        // ...
+                        // zip-логика
                     }
                 </code>
             </pre>
         </section>
 
-        <section>
-            <h3>Языки бывают <strong style="background: black; color: white;">моно</strong>морфными...</h3>
-        </section>
-
-        <section>
-            <h3>... и <strong style="background: black; color: white;">поли</strong>морфными.</h3>
-        </section>
-
-        <section>
+        <section data-background-image="bg.png">
             <pre>
                 <code class="language-php" data-trim>
-                    $value = 'php';
-                </code>
-            </pre>
-            <pre class="fragment">
-                <code class="language-php" data-trim>
-                    // $value is string
-                    print($value);
-                </code>
-            </pre>
-            <pre class="fragment">
-                <code class="language-php" data-trim>
-                    // $value is mixed
-                    var_dump($value);
-                </code>
-            </pre>
-            <pre class="fragment">
-                <code class="language-php" data-trim>
-                    function php(): void {}
+                    function array_map(?callable $callback, array $array, array ...$arrays): array
+                    {
+                        if ($callback === null) {
+                            // zip-логика
+                        }
 
-                    // $value is callable
-                    'php'();
-                    $value();
+                        if (count($arrays) > 0) {
+                            // логика для нескольких массивов
+                        }
+
+                        // логика для одного массива
+                    }
                 </code>
             </pre>
         </section>
 
-        <section>
+        <section data-background-image="bg.png">
             <pre>
-                <code class="language-php" data-trim>
-                    // $value is non-empty-string
-                    // $value is literal-string
-                    // $value is 'php'
-                    // $value is lower-case-string
-                    // $value is non-empty-lower-case-string
-                    // $value is non-falsy-string
-                    // $value is truthy-string
-                    $value = 'php';
+                <code class="language-kotlin" data-trim>
+                    fun &lt;TKey, TInputValue, TOutputValue&gt; array_map(
+                        callback: (TInputValue) -&gt; TOutputValue,
+                        array: Map&lt;TKey, TInputValue&gt;,
+                    ): Map&lt;TKey, TOutputValue&gt;
+
+                    fun &lt;TInputValue, TInputValue2, TOutputValue&gt; array_map(
+                        callback: (TInputValue, TInputValue2) -&gt; TOutputValue,
+                        array: Map&lt;Any, TInputValue&gt;,
+                        array2: Map&lt;Any, TInputValue2&gt;,
+                    ): List&lt;TOutputValue&gt;
+
+                    fun &lt;TInputValue, TInputValue2&gt; array_map(
+                        array: Map&lt;Any, TInputValue&gt;,
+                        array2: Map&lt;Any, TInputValue2&gt;,
+                    ): List&lt;Pair&lt;TInputValue, TInputValue2&gt;&gt;
                 </code>
             </pre>
         </section>
 
-        <section>
+        <section data-background-image="bg.png">
+            <img src="array-map-phpstan.png" alt="">
+        </section>
+
+        <section data-background-image="bg.png">
+            <img src="array-map-psalm.png" alt="">
+        </section>
+
+        <section data-background-image="bg.png">
+            <h2>Это был<br><strong>ad-hoc (специальный)</strong><br>полиморфизм</h2>
+        </section>
+
+        <section data-background-image="bg.png">
+            <h2>Полиморфизм <strong>подтипов</strong> в ООП</h2>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers>
+                    final class Yii {}
+
+                    final class Symfony {}
+
+                    interface Developer
+                    {
+                        public function fix(Yii|Symfony $site): void;
+
+                        public function build(): Yii|Symfony;
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="8-23">
+                    interface Developer
+                    {
+                        public function fix(Yii|Symfony $site): void;
+
+                        public function build(): Yii|Symfony;
+                    }
+
+                    final class Taylor implements Developer
+                    {
+                        public function fix(Symfony|Laravel $site): void
+                        {
+                            // fix bugs...
+                        }
+
+                        public function build(Lamborgini $lamborgini): Symfony|Laravel
+                        {
+                            if (random_int(0, 1) === 1) {
+                                return new Symfony();
+                            } else {
+                                return new Laravel();
+                            }
+                        }
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="8-23">
+                    interface Developer
+                    {
+                        public function fix(Yii|Symfony $site): void;
+
+                        public function build(): Yii|Symfony;
+                    }
+
+                    final class Vasya implements Developer
+                    {
+                        public function fix(Yii|Symfony|Laravel $site): void
+                        {
+                            // fix bugs...
+                        }
+
+                        public function build(?Lamborgini $lamborgini = null): Yii
+                        {
+                            if ($lamborgini === null) {
+                                sleep(5);
+                            }
+
+                            return new Yii();
+                        }
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <img src="variance-arrows.png" alt="" style="box-shadow: 0 5px 15px rgba(0,0,0,.15);">
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="8-23">
+                    interface Developer
+                    {
+                        public function fix(Yii|Symfony $site): void;
+
+                        public function build(): Yii|Symfony;
+                    }
+
+                    final class Petya implements Developer
+                    {
+                        public function fix(Yii|Symfony $site): void
+                        {
+                            // fix bugs...
+                        }
+
+                        public function build(): Yii
+                        {
+                            // build...
+                        }
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers="8-23">
+                    interface Developer
+                    {
+                        public function fix(Yii|Symfony $site): void;
+
+                        public function build(): Yii|Symfony;
+                    }
+
+                    final class Petya implements Developer
+                    {
+                        public function fix(Yii|Symfony $site): void
+                        {
+                            // fix bugs...
+                        }
+
+                        public function build(): Yii
+                        {
+                            sleep(1000);
+
+                            return new Yii();
+                        }
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <h3>A behavioral notion of subtyping (Liskov, Wing, 1994)</h3>
+            <p>Subtype requirement. Let φ(x) be a property provable about objects x of type T.
+                Then φ(y) should be true for objects y of type S where S is a subtype of T.</p>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers>
+                    /**
+                     * @template TSite of Yii|Symfony
+                     */
+                    interface Fixer
+                    {
+                        /**
+                         * @param TSite $site
+                         */
+                        public function fix(Yii|Symfony $site): void;
+                    }
+
+                    /**
+                     * @template TSite of Yii|Symfony
+                     */
+                    interface Builder
+                    {
+                        /**
+                         * @return TSite
+                         */
+                        public function build(): Yii|Symfony;
+                    }
+                </code>
+            </pre>
+        </section>
+
+        <section data-background-image="bg.png">
+            <pre>
+                <code class="language-php" data-trim data-line-numbers>
+                    /**
+                     * @implements Developer&lt;Yii&gt;
+                     */
+                    final class Vasya implements Developer
+                    {
+                        public function fix(Yii|Symfony $site): void
+                        {
+                            // fix bugs...
+                        }
+
+                        public function build(?object $lamborgini = null): Yii
+                        {
+                            return new Yii();
+                        }
+                    }
+
+                    /**
+                     * @param Developer&lt;Yii|Symfony&gt; $developer
+                     */
+                    function fixYii(Developer $developer, Yii $site): void
+                    {
+                        $developer->fix($site);
+                    }
+
+                    fixYii(new Vasya(), new Yii());
+
+                </code>
+            </pre>
+        </section>
+
+        <!--<section data-background-image="bg.png">
             <img src="string-rust-vs-php.jpg" alt="" style="max-width: 700px">
         </section>
 
-        <section>
+        <section data-background-image="bg.png">
             <img src="string-php-vs-java.jpg" alt="" style="max-width: 700px">
-        </section>
+        </section>-->
 
-        <!--<section>
+        <!--<section data-background-image="bg.png">
             <h3>Спасибо за внимание!</h3>
             <img style="width: 45%;" src="qr.png" alt="QR code">
             <p><a href="https://t.me/vudaltsov">@vudaltsov</a> / <a href="https://t.me/phpyh">Пых</a> / <a href="https://youtube.com/@PHPPoint">PHP Point</a></p>
@@ -202,12 +520,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/plugin/highlight/highlight.min.js"></script>
 <script>
     Reveal.initialize({
-        controls: true,
-        progress: true,
+        controls: false,
+        progress: false,
         history: true,
         plugins: [RevealHighlight],
         slideNumber: true,
         autoAnimate: true,
+        /*width: 1440,
+        height: 1080,*/
     });
 </script>
 </body>

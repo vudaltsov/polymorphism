@@ -14,10 +14,6 @@
             --r-heading-font: 'Roboto', 'Noto Color Emoji', sans-serif;
             --r-code-font: 'Roboto Mono', 'Noto Color Emoji', monospace;
             --r-block-margin: 10px;
-            --r-main-font-size: 63px;
-        }
-        body {
-            background: #000 !important;
         }
         .reveal pre {
             font-size: .50em;
@@ -55,29 +51,15 @@
             flex-grow: 0 !important;
             width: calc(50% - var(--r-block-margin) * 2) !important;
         }
-        .reveal .slide-number {
-            bottom: 9% !important;
-            font-size: 50%;
-            right: 48%;
-        }
-        /*body {
-            width: 1440px !important;
-            height: 1080px !important;
-        }*/
-        .slides {
-            background: #fff url('bg.png') center center no-repeat;
-        }
     </style>
     <title>Полиморфизм в современном PHP</title>
 </head>
 <body>
 <div class="reveal">
     <div class="slides">
-        <section style="background: url('bg-title.png') center center no-repeat; background-size: cover; height: 100%;">
-            <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column;">
-                <p><img src="live-php-logo.png" alt="" style="max-width: 300px;"></p>
-                <h1 style="color: white; font-size: 80px;">Полиморфизм<br>в современном PHP</h1>
-            </div>
+        <section data-background-image="bg-title.png">
+            <p><img src="live-php-logo.png" alt="" style="max-width: 250px;"></p>
+            <h1 style="color: white; font-size: 60px;">Полиморфизм<br>в современном PHP</h1>
         </section>
 
         <section>
@@ -95,7 +77,7 @@
         </section>
 
         <section>
-            <img src="termites.jpg" alt="" style="max-width: 600px; box-shadow: 0 5px 15px rgba(0,0,0,.15);">
+            <img src="termites.jpg" alt="" style="max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,.15);">
             <p style="font-size: 20px;"><a href="http://insectalib.ru/books/item/f00/s00/z0000030/st034.shtml" target="_blank">Половой полиморфизм у туркестанского термита</a></p>
         </section>
 
@@ -868,16 +850,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/plugin/highlight/highlight.min.js"></script>
 <script>
     Reveal.initialize({
-        controls: false,
-        progress: false,
+        controls: true,
+        progress: true,
         history: true,
         plugins: [RevealHighlight],
         slideNumber: true,
         autoAnimate: true,
-        transition: "none",
-        width: 1440,
-        height: 1080,
-        margin: 0,
     });
 </script>
 </body>

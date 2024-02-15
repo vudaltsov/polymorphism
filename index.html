@@ -15,6 +15,9 @@
             --r-code-font: 'Roboto Mono', 'Noto Color Emoji', monospace;
             --r-block-margin: 10px;
         }
+        body {
+            background: #000 !important;
+        }
         .reveal pre {
             font-size: .50em;
         }
@@ -52,25 +55,31 @@
             width: calc(50% - var(--r-block-margin) * 2) !important;
         }
         .reveal .slide-number {
-            bottom: 80px !important;
-            font-size: 40px;
+            bottom: 10% !important;
+            font-size: 50%;
+            right: 48%;
         }
         /*body {
             width: 1440px !important;
             height: 1080px !important;
         }*/
+        .slides {
+            background: #fff url('bg.png') center center no-repeat;
+        }
     </style>
     <title>Полиморфизм в современном PHP</title>
 </head>
 <body>
 <div class="reveal">
     <div class="slides">
-        <section data-background-image="bg-title.png">
-            <p><img src="live-php-logo.png" alt="" style="max-width: 200px;"></p>
-            <h1 style="color: white; font-size: 60px;">Полиморфизм<br>в современном PHP</h1>
+        <section style="background: url('bg-title.png') center center no-repeat; background-size: cover; height: 100%;">
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column;">
+                <p><img src="live-php-logo.png" alt="" style="max-width: 300px;"></p>
+                <h1 style="color: white; font-size: 80px;">Полиморфизм<br>в современном PHP</h1>
+            </div>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <p><img src="avatar.jpg" alt="" style="max-width: 300px;"></p>
             <p>Валентин <a href="https://t.me/vudaltsov">@vudaltsov</a></p>
             <p>
@@ -80,16 +89,16 @@
             </p>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <p><strong>Полиморфизм</strong> — возможность существования чего-либо в различных формах.</p>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <img src="termites.jpg" alt="" style="max-width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,.15);">
             <p style="font-size: 20px;"><a href="http://insectalib.ru/books/item/f00/s00/z0000030/st034.shtml" target="_blank">Половой полиморфизм у туркестанского термита</a></p>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim>
                     function array_map(callable $callback, array $array): array
@@ -100,7 +109,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim>
                     $callable = 'date';
@@ -135,11 +144,11 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <h2>Это был полиморфизм <strong>подтипов</strong></h2>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim>
                     function array_map(callable $callback, array $array): array
@@ -150,7 +159,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers="9-12|2,3,6|3-5|2,4,7|">
                     /**
@@ -169,11 +178,11 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <h2>Это был<br><strong>параметрический</strong> полиморфизм</h2>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim>
                     array_map($callback, $array, $array2);
@@ -198,7 +207,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim>
                     var_dump(array_map(null, ['a', 'b', 'c'], [0, 1]));
@@ -224,7 +233,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim>
                     /**
@@ -242,7 +251,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim>
                     function array_map(?callable $callback, array $array, array ...$arrays): array
@@ -261,7 +270,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-kotlin" data-trim>
                     fun &lt;TKey, TInputValue, TOutputValue&gt; array_map(
@@ -283,23 +292,23 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <img src="array-map-phpstan.png" alt="">
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <img src="array-map-psalm.png" alt="">
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <h2>Это был<br><strong>ad-hoc (специальный)</strong><br>полиморфизм</h2>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <h2>Полиморфизм <strong>подтипов</strong> в ООП</h2>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers>
                     interface Website {}
@@ -318,7 +327,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers="8-23">
                     interface Developer
@@ -348,7 +357,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers="8-23">
                     interface Developer
@@ -378,11 +387,11 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <img src="variance-arrows.png" alt="" style="box-shadow: 0 5px 15px rgba(0,0,0,.15);">
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers="8-23">
                     interface Developer
@@ -408,7 +417,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers="8-23">
                     interface Developer
@@ -436,23 +445,23 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <h3>A <strong>behavioral</strong> notion of subtyping (Liskov, Wing, 1994)</h3>
             <p>Subtype requirement. Let φ(x) be a property provable about objects x of type T.
                 Then φ(y) should be true for objects y of type S where S is a subtype of T.</p>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <h3>A behavioral notion of <strong>subtyping</strong> (Liskov, Wing, 1994)</h3>
             <p><strong>Subtype</strong> requirement. Let φ(x) be a property provable about objects x of <strong>type</strong> T.
                 Then φ(y) should be true for objects y of <strong>type</strong> S where S is a <strong>subtype</strong> of T.</p>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <h2><strong>Вариантность</strong> дженериков</h2>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers>
                     interface Website {}
@@ -464,7 +473,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers>
                     /**
@@ -497,7 +506,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers="11-24">
                     /** @template TWebsite of Website */
@@ -528,7 +537,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers="11-24">
                     /** @template TWebsite of Website */
@@ -559,7 +568,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers="2,14">
                     /**
@@ -581,7 +590,7 @@
             <img src="error.png" alt="">
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers="2">
                     /**
@@ -607,7 +616,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers>
                     /**
@@ -629,7 +638,7 @@
             <img src="error.png" alt="">
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers>
                     /**
@@ -651,7 +660,7 @@
             <img src="error-display.png" alt="">
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers>
                     /**
@@ -680,7 +689,7 @@
             </pre>
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers="6-7">
                     /**
@@ -699,7 +708,7 @@
             <img src="error-covariant-add.png" alt="">
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers>
                     /**
@@ -748,7 +757,7 @@
             <img src="no-errors.png" alt="">
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers="1-5|8|">
                     /** @template TWebsite of Website */
@@ -776,7 +785,7 @@
             <img src="no-errors.png" alt="">
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <pre>
                 <code class="language-php" data-trim data-line-numbers>
                     /**
@@ -798,7 +807,7 @@
             <img src="error-3.png">
         </section>
 
-        <section data-background-image="bg.png">
+        <section>
             <h3>Спасибо за внимание!</h3>
             <img style="width: 45%;" src="qr.png" alt="QR code">
             <p>
@@ -820,8 +829,10 @@
         plugins: [RevealHighlight],
         slideNumber: true,
         autoAnimate: true,
-        /*width: 1440,
-        height: 1080,*/
+        transition: "none",
+        width: 1440,
+        height: 1080,
+        margin: 0,
     });
 </script>
 </body>

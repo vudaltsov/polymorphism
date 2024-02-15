@@ -319,7 +319,10 @@
 
                     final class C implements I
                     {
-                        public function do(int|string $a, SplFileInfo $b = new SplFileInfo(__FILE__)): array
+                        public function do(
+                            int|string $a,
+                            SplFileInfo $b = new SplFileInfo(__FILE__),
+                        ): array
                         {
                             return [];
                         }
@@ -421,7 +424,10 @@
 
                     final class C implements I
                     {
-                        public function do(int|string $a, SplFileInfo $b = new SplFileInfo(__FILE__)): array
+                        public function do(
+                            int|string $a,
+                            SplFileInfo $b = new SplFileInfo(__FILE__),
+                        ): array
                         {
                             return [];
                         }
